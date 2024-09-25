@@ -1,5 +1,6 @@
 ﻿@page
 @model AzureTeacherStudentSystem.Pages.Students.IndexModel
+@inject IHttpContextAccessor accessor
 
 @{
     ViewData["Title"] = "Index";
@@ -8,9 +9,13 @@
 
 <h1>Index</h1>
 
-<p>
-    <a asp-page="Create">Create New</a>
-</p>
+@if (accessor.HttpContext?.Session.GetInt32("role") == 0)
+{
+    <p>
+        <a asp-page="Create">Create New</a>
+    </p>
+}
+
 <table class="table">
     <thead>
         <tr>
@@ -22,9 +27,6 @@
             </th>
             <th>
                 @Html.DisplayNameFor(model => model.Student[0].Email)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Student[0].Password)
             </th>
             <th>
                 Group
@@ -44,16 +46,16 @@
             <td>
                 @Html.DisplayFor(modelItem => item.Email)
             </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Password)
-            </td>
                 <td>
-                    @Html.DisplayFor(modelItem => item.Group.Name)
+                    @Html.DisplayFor(modelItem => item.GroupName)
                 </td>
             <td>
-                <a asp-page="./Edit" asp-route-id="@item.Id">Edit</a> |
-                <a asp-page="./Details" asp-route-id="@item.Id">Details</a> |
-                <a asp-page="./Delete" asp-route-id="@item.Id">Delete</a>
+                    @if (accessor.HttpContext?.Session.GetInt32("role") == 0)
+                    {
+                        <a asp-page="./Edit" asp-route-id="@item.Id">Edit</a>
+                        <a asp-page="./Details" asp-route-id="@item.Id">Details</a>
+                        <a asp-page="./Delete" asp-route-id="@item.Id">Delete</a>
+                    }
             </td>
         </tr>
 }

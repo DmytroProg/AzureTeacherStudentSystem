@@ -1,9 +1,166 @@
 ﻿@page
 @model AzureTeacherStudentSystem.Pages.IndexModel
+@inject IHttpContextAccessor accessor
 
 @{
     ViewData["Title"] = "Index";
     Layout = "~/Pages/Shared/_Layout.cshtml";
 }
 
-<h1>Index</h1>
+<style>
+
+    .calendar {
+        background: white;
+        padding: 20px;
+        border-radius: 10px;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        display: flex;
+        flex-direction: column;
+        height: 100%;
+        width: 100%;
+        max-width: 1000px;
+        max-height: 700px;
+    }
+
+    .month {
+        text-align: center;
+        margin-bottom: 10px;
+    }
+
+    .days {
+        display: grid;
+        grid-template-columns: repeat(7, 1fr);
+        grid-auto-rows: 1fr;
+        gap: 5px;
+        flex-grow: 1;
+    }
+
+    .day-name {
+        background-color: #eee;
+        text-align: center;
+        padding: 10px 2px;
+        font-weight: bold;
+        border-radius: 5px;
+    }
+
+    .day {
+        border: 1px solid #ddd;
+        padding: 10px;
+        border-radius: 5px;
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+        min-height: 100px;
+    }
+
+    .empty {
+        visibility: hidden;
+    }
+
+    .date {
+        font-weight: bold;
+        margin-bottom: 5px;
+    }
+
+    .events {
+        font-size: 12px;
+        color: #555;
+    }
+
+    .event {
+        background-color: #f0ad4e;
+        padding: 5px;
+        border-radius: 3px;
+        color: white;
+        font-size: 11px;
+        margin-top: 5px;
+    }
+</style>
+
+<h1>Schedule</h1>
+
+@if (accessor.HttpContext?.Session.GetInt32("role") == 0)
+{
+    <div>
+        <a asp-page="./AddSchedule" class="btn btn-warning">Add Schedule</a>
+        <a asp-page="./AddLesson" class="btn btn-success">Add Lesson</a>
+    </div>
+}
+
+<br/>
+
+<div>
+    <form method="post">
+        <div class="form-group">
+            <label class="control-label">Group</label>
+            <select name="group">
+                @foreach (var group in Model.Groups)
+                {
+                    @if (IndexModel.SelectedGroupId != null && IndexModel.SelectedGroupId == group.Id)
+                    {
+                        <option value="@group.Id" selected>@group.Name</option>
+                    }
+                    else
+                    {
+                        <option value="@group.Id">@group.Name</option>
+                    }
+                }
+            </select>
+        </div>
+        <input type="submit" value="Filter" class="btn-secondary"/>
+    </form>
+</div>
+
+<div class="calendar">
+    <div class="month">
+        <h2>@Model.DateFilter.ToShortDateString()</h2>
+    </div>
+    <div class="days">
+        <div class="day-name">Sun</div>
+        <div class="day-name">Mon</div>
+        <div class="day-name">Tue</div>
+        <div class="day-name">Wed</div>
+        <div class="day-name">Thu</div>
+        <div class="day-name">Fri</div>
+        <div class="day-name">Sat</div>
+
+
+        @for(int i = 0; i < Model.GetEmptyDaysCount(); i++)
+        {
+            <div class="empty"></div>
+        }
+
+
+        @for(int i = 1; i <= DateTime.DaysInMonth(Model.DateFilter.Year, Model.DateFilter.Month); i++)
+        {
+            <div class="day"><span class="date">@i</span>
+                <div class="events">
+                    @foreach (var lesson in Model.Lessons.Where(x => x.Date.Date.Equals(new DateTime(Model.DateFilter.Year, Model.DateFilter.Month, i))))
+                    {
+                        <div class="event">
+                            <a asp-page="./Lesson" asp-route-id="@lesson.Id">@($"{lesson.Topic} - {lesson.Date.ToString("hh:mm")}")</a>
+                        </div>
+                    }
+                </div>
+            </div>
+        }
+
+        @* <!-- Days with events -->
+        <div class="day">
+            <span class="date">1</span>
+            <div class="events">
+                <div class="event">Meeting at 10 AM</div>
+                <div class="event">Meeting at 14 AM</div>
+            </div>
+        </div>
+        <div class="day">
+            <span class="date">2</span>
+            <div class="events">
+                <div class="event">Lunch with Sarah</div>
+            </div>
+        </div> *@
+
+
+        <!-- Continue for all other days -->
+    </div>
+</div>

@@ -6,5 +6,7 @@
         public virtual Teacher Teacher { get; set; }
         public virtual Subject Subject { get; set; }
         public Group Group { get; set; }
+
+        public ICollection<Lesson> Lessons { get; set; }
     }
 }

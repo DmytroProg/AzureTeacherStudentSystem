@@ -1,0 +1,74 @@
+﻿@page
+@model AzureTeacherStudentSystem.Pages.AddLessonModel
+
+@{
+    ViewData["Title"] = "AddLesson";
+    Layout = "~/Pages/Shared/_Layout.cshtml";
+}
+
+<h1>AddLesson</h1>
+
+<h4>Lesson</h4>
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <form method="post">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <div class="form-group">
+                <label asp-for="Lesson.Date" class="control-label"></label>
+                <input asp-for="Lesson.Date" class="form-control" type="datetime"/>
+                <span asp-validation-for="Lesson.Date" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Lesson.Topic" class="control-label"></label>
+                <input asp-for="Lesson.Topic" class="form-control" />
+                <span asp-validation-for="Lesson.Topic" class="text-danger"></span>
+            </div>
+            @* <div class="form-group">
+                <label asp-for="Lesson.Homework" class="control-label"></label>
+                <input asp-for="Lesson.Homework" class="form-control" />
+                <span asp-validation-for="Lesson.Homework" class="text-danger"></span>
+            </div> *@
+            <div class="form-group">
+                <label class="control-label">Teacher</label>
+                <select name="teacher">
+                    @foreach (var teacher in Model.Teachers)
+                    {
+                        <option value="@teacher.Id">@teacher.FullName</option>
+                    }
+                </select>
+            </div>
+            <br />
+            <div class="form-group">
+                <label class="control-label">Subject</label>
+                <select name="subject">
+                    @foreach (var subject in Model.Subjects)
+                    {
+                        <option value="@subject.Id">@subject.Name</option>
+                    }
+                </select>
+            </div>
+            <br />
+            <div class="form-group">
+                <label class="control-label">Group</label>
+                <select name="group">
+                    @foreach (var group in Model.Groups)
+                    {
+                        <option value="@group.Id">@group.Name</option>
+                    }
+                </select>
+            </div>
+            <div class="form-group">
+                <input type="submit" value="Create" class="btn btn-primary" />
+            </div>
+        </form>
+    </div>
+</div>
+
+<div>
+    <a asp-page="Index">Back to List</a>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}
