@@ -138,7 +138,14 @@
                     @foreach (var lesson in Model.Lessons.Where(x => x.Date.Date.Equals(new DateTime(Model.DateFilter.Year, Model.DateFilter.Month, i))))
                     {
                         <div class="event">
-                            <a asp-page="./Lesson" asp-route-id="@lesson.Id">@($"{lesson.Topic} - {lesson.Date.ToString("hh:mm")}")</a>
+                            @if (accessor.HttpContext.Session.GetInt32("role") == 2)
+                            {
+                                <a asp-page="./Lesson" asp-route-id="@lesson.Id">@($"{lesson.Topic} - {lesson.Date.ToString("hh:mm")}")</a>
+                            }
+                            else
+                            {
+                                <p>@($"{lesson.Topic} - {lesson.Date.ToString("hh:mm")}")</p>
+                            }
                         </div>
                     }
                 </div>

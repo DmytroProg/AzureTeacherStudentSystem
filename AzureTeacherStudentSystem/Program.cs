@@ -27,6 +27,7 @@ builder.Services.AddRazorPages();
 builder.Services.AddAzureClients(clientBuilder =>
 {
     clientBuilder.AddBlobServiceClient(builder.Configuration["StorageAccountConnectionString"]);
+    clientBuilder.AddTableServiceClient(builder.Configuration["StorageAccountConnectionString"]);
     clientBuilder.AddQueueServiceClient(builder.Configuration["StorageAccountConnectionString"]);
 });
 

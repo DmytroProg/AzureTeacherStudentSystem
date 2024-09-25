@@ -27,7 +27,7 @@ namespace AzureTeacherStudentSystem.Pages
 
         public async Task OnGetAsync()
         {
-            HttpContext.Session.SetInt32("role", (int)UserRole.Teacher);
+            HttpContext.Session.SetInt32("role", (int)UserRole.Student);
 
             DateFilter = DateTime.Now;
             Groups = _context.Groups.ToList();
